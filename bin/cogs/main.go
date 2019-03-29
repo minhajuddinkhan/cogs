@@ -6,6 +6,7 @@ import (
 
 	"github.com/minhajuddinkhan/cogs/cmd"
 	"github.com/minhajuddinkhan/cogs/store/bolt"
+	"github.com/minhajuddinkhan/cogs/types"
 	"github.com/urfave/cli"
 )
 
@@ -18,9 +19,10 @@ func main() {
 
 	app := cli.NewApp()
 	store := bolt.New(volume, dbName)
-	app.Before = cmd.BeforeAction(store)
+	var creds types.Credentials
+	app.Before = cmd.BeforeAction(store, &creds)
 	app.Commands = []cli.Command{
-		cmd.Lunch(store),
+		cmd.Lunch(store, &creds),
 	}
 
 	if err := app.Run(os.Args); err != nil {

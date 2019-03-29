@@ -7,13 +7,11 @@ import (
 )
 
 type AuthBody struct {
-	Data AuthData `json:"data"`
-}
-type AuthData struct {
-	Attributes AuthAttrs `json:"attributes"`
-}
-type AuthAttrs struct {
-	AccessToken string `json:"access-token"`
+	Data struct {
+		Attributes struct {
+			AccessToken string `json:"access-token"`
+		} `json:"attributes"`
+	} `json:"data"`
 }
 
 // GetAccessToken request for cogs
