@@ -5,8 +5,8 @@ import (
 	"log"
 	"syscall"
 
-	"github.com/minhajuddinkhan/cogs"
 	"github.com/minhajuddinkhan/cogs/ciphers"
+	"github.com/minhajuddinkhan/cogs/services/cogs"
 	"github.com/minhajuddinkhan/cogs/types"
 	"golang.org/x/crypto/ssh/terminal"
 

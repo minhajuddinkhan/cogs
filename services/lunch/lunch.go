@@ -1,14 +1,14 @@
 package lunch
 
 import (
-	"github.com/minhajuddinkhan/cogs/store/bolt"
+	"github.com/minhajuddinkhan/cogs/services/cogs"
 	"github.com/minhajuddinkhan/cogs/types"
 )
 
 // Today gets todays lunch
-func Today(store bolt.Store, creds *types.Credentials) (*types.Lunch, error) {
+func Today(c cogs.Cogs) (*types.Lunch, error) {
 
-	raw, err := Request(store, creds)
+	raw, err := Request(c)
 	if err != nil {
 		return nil, err
 	}

@@ -4,29 +4,28 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/minhajuddinkhan/cogs"
-	"github.com/minhajuddinkhan/cogs/store/bolt"
-	"github.com/minhajuddinkhan/cogs/types"
+	"github.com/minhajuddinkhan/cogs/endpoint"
+	"github.com/minhajuddinkhan/cogs/services/cogs"
 )
 
 const (
-	url = "/Lunches/Weekly"
+	url = endpoint.BaseURL + "/Lunches/Weekly"
 )
 
 // Request requests lunch from cogs API
-func Request(store bolt.Store, creds *types.Credentials) ([]byte, error) {
+func Request(c cogs.Cogs) ([]byte, error) {
 
 	headers := map[string]string{
-		"Authorization": fmt.Sprintf("Bearer %s", creds.AccessToken),
+		"Authorization": fmt.Sprintf("Bearer %s", c.Credentials().AccessToken),
 	}
-	raw, err := cogs.Request(url, http.MethodGet, "", headers)
+	raw, err := endpoint.Request(url, http.MethodGet, "", headers)
 	if err != nil {
 		switch e := err.(type) {
-		case cogs.HttpError:
+		case endpoint.HttpError:
 			if e.Code != http.StatusUnauthorized {
 				return nil, e
 			}
-			if err := cogs.Update(store, creds); err != nil {
+			if err := c.Update(); err != nil {
 				return nil, err
 			}
 		default:

@@ -3,24 +3,22 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/fatih/color"
+	"github.com/minhajuddinkhan/cogs/services/cogs"
 	"github.com/minhajuddinkhan/cogs/services/lunch"
-	"github.com/minhajuddinkhan/cogs/store/bolt"
-	"github.com/minhajuddinkhan/cogs/types"
+	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli"
 )
 
 // Lunch Gets Lunch
-func Lunch(store bolt.Store, creds *types.Credentials) cli.Command {
+func Lunch(cgs cogs.Cogs) cli.Command {
 	return cli.Command{
 		Name:  "lunch",
 		Usage: "Gets you todays lunch",
 		Action: func(c *cli.Context) error {
 			logrus.Info("fetching lunch..")
 
-			todaysLunch, err := lunch.Today(store, creds)
+			todaysLunch, err := lunch.Today(cgs)
 			if err != nil {
 				return err
 			}

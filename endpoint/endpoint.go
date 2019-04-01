@@ -1,4 +1,4 @@
-package cogs
+package endpoint
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-const baseURL = "https://cogs.10pearls.com/cogsapi/api"
+const BaseURL = "https://cogs.10pearls.com/cogsapi/api"
 
 type HttpError struct {
 	Code    int
@@ -25,7 +25,6 @@ var (
 )
 
 func Request(url, verb, data string, headers map[string]string) ([]byte, error) {
-	url = fmt.Sprintf("%s%s", baseURL, url)
 	client := &http.Client{}
 
 	var (
