@@ -21,7 +21,7 @@ type AuthBody struct {
 // GetAccessToken request for cogs
 func GetAccessToken(username, password string) (*Attrs, error) {
 	payload := `{"data":{"type":"auths","attributes":{"userName":"%s","password":"%s","keepMeLoggedIn":true}},"included":[]}`
-	raw, err := request(
+	raw, err := Request(
 		fmt.Sprintf("%s/auth/login", baseURL),
 		http.MethodPost,
 		fmt.Sprintf(payload, username, password),

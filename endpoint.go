@@ -24,7 +24,8 @@ var (
 	ErrInternalServer = HttpError{http.StatusInternalServerError, "server not responding"}
 )
 
-func request(url, verb, data string, headers map[string]string) ([]byte, error) {
+func Request(url, verb, data string, headers map[string]string) ([]byte, error) {
+	url = fmt.Sprintf("%s%s", baseURL, url)
 	client := &http.Client{}
 
 	var (
