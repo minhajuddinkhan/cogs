@@ -20,8 +20,9 @@ const (
 func Update(store bolt.Store, c *types.Credentials) error {
 
 	var (
-		accToken string
-		hash     []byte
+		accToken   string
+		hash       []byte
+		employeeID int
 	)
 	pvKey, err := ciphers.BytesToPrivateKey(c.PrivateKey)
 	if err != nil {
@@ -34,7 +35,11 @@ func Update(store bolt.Store, c *types.Credentials) error {
 	}
 
 	creds := strings.Split(string(text), Delimiter)
-	accToken, err = GetAccessToken(creds[0], creds[1])
+	attrs, err := GetAccessToken(creds[0], creds[1])
+	if err != nil {
+		return err
+	}
+	accToken = attrs.AccessToken
 	if err != nil {
 		valid := false
 		var username, pwd string
@@ -44,7 +49,9 @@ func Update(store bolt.Store, c *types.Credentials) error {
 				return err
 			}
 
-			accToken, err = GetAccessToken(username, pwd)
+			attrs, err = GetAccessToken(username, pwd)
+			accToken = attrs.AccessToken
+			employeeID = attrs.EmployeeID
 			if err != nil {
 				if "y" == TakeInput("Invalid Credentials. Do you want to continue? [y/N]") {
 					continue
@@ -67,5 +74,6 @@ func Update(store bolt.Store, c *types.Credentials) error {
 
 	c.Hash = hash
 	c.AccessToken = accToken
+	c.EmployeeID = employeeID
 	return store.Create([]byte(CredsKey), c, Bucket)
 }

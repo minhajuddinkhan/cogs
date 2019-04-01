@@ -6,4 +6,5 @@ type Credentials struct {
 	PublicKey   []byte
 	PrivateKey  []byte
 	AccessToken string
+	EmployeeID  int
 }

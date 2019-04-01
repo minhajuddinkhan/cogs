@@ -26,13 +26,12 @@ var BeforeAction = func(store bolt.Store, creds *types.Credentials) cli.BeforeFu
 			return nil
 		}
 		if hasLoggedInBefore(store, creds) {
-
 			return nil
 		}
 		validUsernameAndPassword := false
 		var username, password, accessToken string
+		var employeeID int
 		for !validUsernameAndPassword {
-
 			username = cogs.TakeInput("Enter your username")
 			fmt.Println("Enter Password")
 			bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
@@ -40,7 +39,7 @@ var BeforeAction = func(store bolt.Store, creds *types.Credentials) cli.BeforeFu
 				return err
 			}
 			password = string(bytePassword)
-			accessToken, err = cogs.GetAccessToken(username, password)
+			attrs, err := cogs.GetAccessToken(username, password)
 			if err != nil {
 				again := cogs.TakeInput("Invalid Credentials. Do you want to try again [y/N]")
 				if again == "y" {
@@ -48,6 +47,9 @@ var BeforeAction = func(store bolt.Store, creds *types.Credentials) cli.BeforeFu
 				}
 				return cli.NewExitError("", 1)
 			}
+			accessToken = attrs.AccessToken
+			employeeID = attrs.EmployeeID
+
 			validUsernameAndPassword = true
 		}
 
@@ -72,6 +74,7 @@ var BeforeAction = func(store bolt.Store, creds *types.Credentials) cli.BeforeFu
 		creds.PrivateKey = ciphers.PrivateKeyToBytes(pvKey)
 		creds.Hash = hash
 		creds.AccessToken = accessToken
+		creds.EmployeeID = employeeID
 		return store.Create([]byte(cogs.CredsKey), creds, cogs.Bucket)
 	}
 
